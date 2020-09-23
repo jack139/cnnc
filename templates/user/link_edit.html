@@ -1,0 +1,85 @@
+$def with (name, str1, sku)
+
+$var title: 页面链接管理
+$var css: 
+$var name: $'|'.join(str1) $name
+$var js: 
+$var load: 
+$var menu: #plat1
+
+$if sku['page_id']=='n/a':
+    <div class="caption"><h2>新建页面链接</h2></div>
+$else:
+    <div class="caption"><h2>修改页面链接</h2></div>
+
+<form name="new_sku" id="new_sku" method="post" action="/plat/link_edit">
+<input type="hidden" name="page_id" value="$sku['page_id']"/>
+<input type="hidden" name="parent_id" value="$sku.get('parent_id','')"/>
+
+<table class="props_tb">
+<thead>
+    <tr class="even">
+        <th width="15%">项目</th>
+        <th width="40%">内容</th>
+        <th>说明</th>
+    </tr>
+</thead>
+<tbody>
+<tr><td>页面链接名称</td><td>
+    <input type="text" name="link_name" id="link_name" value="$sku.get('link_name', '')"/>
+    </td><td></td></tr>
+
+<tr><td>页面链接说明</td><td>
+    <input type="text" name="link_note" id="link_note" value="$sku.get('link_note', '')"/>
+    </td><td></td></tr>
+
+<tr><td>链接的页面编码</td><td>
+    <input type="text" name="link_page_code" id="link_page_code" value="$sku.get('link_page_code', '')"/>
+    </td><td>填写要链接的页面编码（不需要加@）</td></tr>
+
+<tr><td>排序权重</td><td>
+    <input type="text" name="weight" id="weight" value="$sku.get('weight', '1')"/>
+    </td><td>输入数字，数值越小，排序靠前</td></tr>
+
+<tr><td>状态</td><td>
+    <input type="radio" name="available" value="1"
+    $if int(sku.get('available','0'))==1:
+        checked="checked"
+    /> 使用
+    <input type="radio" name="available" value="0"
+    $if int(sku.get('available','0'))==0:
+        checked="checked"
+    /> 停用
+    </td><td>停用则不在目录中显示</td></tr>
+
+</tbody></table>
+
+
+<p><input type="submit" name="submit" id="submit" value="保存"/>
+<input type="button" name="remove" id="remove_button" value="删除" />
+<input type="button" name="cancel" value="返回" onclick="history.go(-1);" /><p>
+</form>
+
+
+<div class="article_box">
+  <div>操作日志：</div>
+  <textarea rows="8" cols="80" id="history">
+  $for h in sku.get('history',[]):
+      $h[0]，用户：$h[1]，操作：$h[2]；
+  </textarea>
+</div>
+
+<br/>
+
+<script type="text/javascript">
+$$(function(){
+    $$('#remove_button').click(function(){
+      alertify.confirm("删除页面链接", "确定要删除页面链接吗？",
+          function(){
+            window.location = '/plat/link_remove?page_id=$sku['page_id']&parent_id=$sku.get('parent_id','')';
+          },
+          function(){ }
+      );         
+    });
+});
+</script>

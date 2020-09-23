@@ -1,0 +1,99 @@
+$def with (name, str1, sku)
+
+$var title: 关键词回复规则管理
+$var css: 
+$var name: $'|'.join(str1) $name
+$var js: 
+$var load: 
+$var menu: #plat4
+
+$if sku['rule_id']=='n/a':
+    <div class="caption"><h2>新增规则</h2></div>
+$else:
+    <div class="caption"><h2>修改规则</h2></div>
+
+<form name="new_sku" id="new_sku" method="post" action="/plat/bayes_edit">
+<input type="hidden" name="rule_id" value="$sku['rule_id']"/>
+
+<table class="props_tb">
+<thead>
+    <tr class="even">
+        <th>项目</th>
+        <th width="40%">内容</th>
+        <th>说明</th>
+    </tr>
+</thead>
+<tbody>
+<tr><td>规则名</td><td>
+    <input type="text" name="rule_name" id="rule_name" value="$sku.get('rule_name', '')"/>
+    </td><td></td></tr>
+
+<tr><td>关键词</td><td>
+    <textarea rows="5" cols="80" name="key_word">$sku.get('key_word', '')</textarea>
+    </td><td>关键词之间用逗号分隔</td></tr>
+
+<tr><td>回复类型</td><td>
+    <input type="radio" name="reply_type" value="1"
+    $if int(sku.get('reply_type','0'))==1:
+        checked="checked"
+    /> 病种链接（病种名称/页面编码）
+    <input type="radio" name="reply_type" value="2"
+    $if int(sku.get('reply_type','0'))==2:
+        checked="checked"
+    /> 网页链接（URL地址）
+    <input type="radio" name="reply_type" value="0"
+    $if int(sku.get('reply_type','0'))==0:
+        checked="checked"
+    /> 文本信息
+    </td><td></td></tr>
+
+<tr><td>回复内容</td><td>
+    <textarea rows="5" cols="80" name="reply">$sku.get('reply', '')</textarea>
+    </td>
+    <td>病种名称必须与病种文件夹名一致；<br/> 页面编码支持大小写；<br/>
+        网页链接格式：说明|URL地址<br/>文本信息支持随机回复，用'|'分隔
+    </td></tr>
+
+<tr><td>状态</td><td>
+    <input type="radio" name="available" value="1"
+    $if int(sku.get('available','0'))==1:
+        checked="checked"
+    /> 使用
+    <input type="radio" name="available" value="0"
+    $if int(sku.get('available','0'))==0:
+        checked="checked"
+    /> 停用
+    </td><td></td></tr>
+
+</tbody></table>
+
+<p><input type="submit" name="submit" id="submit" value="保存"/>
+    <input type="button" name="remove" id="remove_button" value="删除" />
+<input type="button" name="cancel" value="返回" onclick="history.go(-1);" /><p>
+</form>
+
+
+<div class="article_box">
+  <div>操作日志：</div>
+  <textarea rows="8" cols="80" id="history">
+  $for h in sku.get('history',[]):
+      $h[0]，用户：$h[1]，操作：$h[2]；
+  </textarea>
+</div>
+
+<br/>
+
+<script type="text/javascript">
+$$(function(){
+
+    $$('#remove_button').click(function(){
+      alertify.confirm("删除规则", "确定要删除此规则吗？",
+          function(){
+            window.location = "/plat/bayes_remove?rule_id=$sku['rule_id']";
+          },
+          function(){ }
+      );         
+    });
+
+});
+</script>

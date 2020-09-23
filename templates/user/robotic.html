@@ -1,0 +1,16 @@
+$def with (name, str1, page)
+
+$var title: 医生诊断
+$var css:
+$var js: /static/js/robotic.js
+$var name: $'|'.join(str1) $name
+$var load: first_init();
+$var menu: #doct1
+
+<div class="caption"><h2>医生诊断 - $page['page_code']</h2></div>
+
+<input type="hidden" id="start_node" name="start_node" value="$page['start_node']" />
+
+<div class="article_box" id="node_list"></div>
+
+<p><input type="button" name="back_button" id="back_button" value="后退"/></p>

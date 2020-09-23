@@ -1,0 +1,104 @@
+$def with (name, str1, sku, dir_list)
+
+$var title: 目录管理
+$var css: 
+$var name: $'|'.join(str1) $name
+$var js: 
+$var load: 
+$var menu: #plat1
+
+$if sku['page_id']=='n/a':
+    <div class="caption"><h2>新建目录</h2></div>
+$else:
+    <div class="caption"><h2>修改目录</h2></div>
+
+<form name="new_sku" id="new_sku" method="post" action="/plat/dir_edit">
+<input type="hidden" name="page_id" value="$sku['page_id']"/>
+<!--input type="hidden" name="parent_id" value="$sku.get('parent_id','')"/-->
+
+<table class="props_tb">
+<thead>
+    <tr class="even">
+        <th width="15%">项目</th>
+        <th width="40%">内容</th>
+        <th>说明</th>
+    </tr>
+</thead>
+<tbody>
+<tr><td>目录名称</td><td>
+    <input type="text" name="dir_name" id="dir_name" value="$sku.get('dir_name', '')"/>
+    </td><td></td></tr>
+
+<tr><td>版本说明</td><td>
+    <input type="text" name="dir_note" id="dir_note" value="$sku.get('dir_note', '')"/>
+    </td><td></td></tr>
+
+<tr><td>排序权重</td><td>
+    <input type="text" name="weight" id="weight" value="$sku.get('weight', '1')"/>
+    </td><td>输入数字，数值越小，排序靠前</td></tr>
+
+<tr><td>目录位置</td><td>
+    <select name="parent_id">
+        $for i in dir_list:
+            <option value="$i[0]"
+                $if sku.get('parent_id')==i[0]:
+                    selected="selected"
+            >$i[1]['path']</option>
+    </select>
+    </td><td>选择不同路径可以移动页面到其他目录</td></tr>
+
+<tr><td>状态</td><td>
+    <input type="radio" name="available" value="1"
+    $if int(sku.get('available','0'))==1:
+        checked="checked"
+    /> 使用
+    <input type="radio" name="available" value="0"
+    $if int(sku.get('available','0'))==0:
+        checked="checked"
+    /> 停用
+    </td><td>停用则不在目录中显示</td></tr>
+
+</tbody></table>
+
+
+<p><input type="submit" name="submit" id="submit" value="保存"/>
+$if sku['page_id']!='n/a':
+    <input type="button" name="remove" id="copy_button" value="复制" />
+    <input type="button" name="remove" id="remove_button" value="删除" />
+<input type="button" name="cancel" value="返回" onclick="history.go(-1);" /><p>
+</form>
+
+
+<div class="article_box">
+  <div>操作日志：</div>
+  <textarea rows="8" cols="80" id="history">
+  $for h in sku.get('history',[]):
+      $h[0]，用户：$h[1]，操作：$h[2]；
+  </textarea>
+</div>
+
+<br/>
+
+$if sku['page_id']!='n/a':
+    <script type="text/javascript">
+    $$(function(){
+        $$('#copy_button').click(function(){
+          alertify.confirm("复制目录", "确定要复制目录吗？",
+              function(){
+                window.location = "/plat/dir_copy?page_id=$sku['_id']&parent_id=$sku.get('parent_id','')";
+              },
+              function(){ }
+          );         
+        });
+
+        $$('#remove_button').click(function(){
+          alertify.confirm("删除目录", "确定要删除目录吗？",
+              function(){
+                window.location = "/plat/dir_remove?page_id=$sku['page_id']&parent_id=$sku.get('parent_id','')";
+              },
+              function(){ }
+          );         
+        });
+
+    });
+    </script>

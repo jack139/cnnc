@@ -1,0 +1,60 @@
+$def with (name, str1, sku)
+
+$var title: 索引管理
+$var css: 
+$var name: $'|'.join(str1) $name
+$var js: 
+$var load: 
+$var menu: #plat3
+
+$if sku['note_id']=='n/a':
+    <div class="caption"><h2>新增索引信息</h2></div>
+$else:
+    <div class="caption"><h2>修改索引信息</h2></div>
+
+<form name="new_sku" id="new_sku" method="post" action="/plat/note_edit">
+<input type="hidden" name="note_id" value="$sku['note_id']"/>
+
+<table class="props_tb">
+<thead>
+    <tr class="even">
+        <th width="15%">项目</th>
+        <th>内容</th>
+        <th>说明</th>
+    </tr>
+</thead>
+<tbody>
+<tr><td>索引编码</td><td>
+    <input type="text" name="note_code" id="note_code" value="$sku.get('note_code', '')"/>
+    </td><td>请遵照约定的索引编码规则</td></tr>
+
+<tr><td>版本说明</td><td>
+    <input type="text" name="version" id="version" value="$sku.get('version', '')"/>
+    </td><td></td></tr>
+
+<tr><td>索引内容</td><td>
+    <textarea rows="5" cols="80" name="note_content">$sku.get('note_content', '')</textarea>
+    </td><td></td></tr>
+
+<tr><td>排序权重</td><td>
+    <input type="text" name="weight" id="weight" value="$sku.get('weight', '1')"/>
+    </td><td>输入数字，数值越小，排序靠前</td></tr>
+
+</tbody></table>
+
+
+<p><input type="submit" name="submit" id="submit" value="保存"/>
+<input type="button" name="cancel" value="返回" onclick="history.go(-1);" /><p>
+</form>
+
+
+<div class="article_box">
+  <div>操作日志：</div>
+  <textarea rows="8" cols="80" id="history">
+  $for h in sku.get('history',[]):
+      $h[0]，用户：$h[1]，操作：$h[2]；
+  </textarea>
+</div>
+
+<br/>
+

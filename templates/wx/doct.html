@@ -1,0 +1,212 @@
+$def with (session_id, parent_id, page_id, page_code, parent_title='', signature={})
+
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta content="" name="description">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <meta name="format-detection" content="telephone=no">
+        <title></title>
+        <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css"/>
+        <link rel="stylesheet" href="/static/css/alertify.min.css" />
+        <link rel="stylesheet" type="text/css" href="/static/css/doct_ui2.css?v=0.29" />
+        <script type="text/javascript" src="/static/js/jointjs/jquery.min.js"></script>
+        <script type="text/javascript" src="/static/js/alertify.min.js"></script>
+        <script type="text/javascript" src="/static/js/jquery.touch.min.js"></script>
+        <script type="text/javascript" src="/static/js/jquery.sidebar.min.js"></script>
+        <script type="text/javascript" src="/static/js/jquery.connections.js?v=0.08"></script>
+        <script type="text/javascript" src="/static/js/jquery.tabSlideOut.v1.3.js?v=1.0"></script>
+        <script type="text/javascript" src="/static/js/jquery.scrollTo.min.js"></script>
+        <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+        <script type="text/javascript" src="/static/js/wx/ui_helper.min.js?v=0.34"></script>     
+        <script type="text/javascript" src="/static/js/wx/doct2.min.js?v=0.29"></script>
+        <style type="text/css">
+            body{font-family:"Microsoft YaHei",Arial; overflow-x:auto; overflow-y:auto; margin: 5px 5px 5px 5px;background-color: #e2f5fb;}
+            .slide-out-div {
+                padding: 20px;
+                width: 250px;
+                background: #e1e8f0;
+                color: #35455c;
+                border: 1px solid #35455c;
+                z-index: 995;
+            }      
+        </style>
+    </head>
+<body>
+
+<script type="text/javascript">
+$$(function () { // 关闭分享
+    wx.config({
+        debug     : false, // 开启调试模式,
+        appId     : "$signature['appid']", // 必填，公众号的唯一标识
+        timestamp : "$signature['timestamp']", // 必填，生成签名的时间戳
+        nonceStr  : "$signature['nonceStr']", // 必填，生成签名的随机串
+        signature : "$signature['sign']",// 必填，签名
+        jsApiList : [
+            "hideMenuItems",
+            "updateAppMessageShareData",
+            "updateTimelineShareData",
+            "onMenuShareTimeline",
+            "onMenuShareAppMessage",
+        ], // 必填，需要使用的JS接口列表
+    });
+
+    wx.ready(function () {
+        wx.hideMenuItems({
+            menuList: [ 
+                "menuItem:share:appMessage",
+                "menuItem:share:timeline",
+                "menuItem:share:qq", 
+                "menuItem:share:weiboApp",
+                "menuItem:share:facebook", 
+                "menuItem:share:QZone",
+                "menuItem:favorite",
+                "menuItem:originPage",
+                "menuItem:openWithQQBrowser",
+                "menuItem:openWithSafari",
+                "menuItem:share:email",
+                "menuItem:share:brand",
+                "menuItem:copyUrl",
+            ] // 只能隐藏“传播类”和“保护类”按钮
+        });
+
+        wx.onMenuShareAppMessage({ 
+            title : "$parent_title", // 分享标题
+            desc  : "无需关注公众号！还免费的哦！", // 分享描述
+            link  : "http:///wx/init_cate2?parent_id=$parent_id", // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: "http:///static/image/logo.png?v=1", // 分享图标
+            success : function () {}
+        });
+
+        wx.onMenuShareTimeline({ 
+            title : "$parent_title", // 分享标题
+            link  : "http:///wx/init_cate2?parent_id=$parent_id", // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: "http:///static/image/logo.png?v=1", // 分享图标
+            success : function () {}
+        });
+
+        wx.updateAppMessageShareData({ 
+            title : "$parent_title", // 分享标题
+            desc  : "无需关注公众号！还免费的哦！", // 分享描述
+            link  : "http:///wx/init_cate2?parent_id=$parent_id", // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: "http:///static/image/logo.png?v=1", // 分享图标
+            success : function () {}
+        });
+
+        wx.updateTimelineShareData({ 
+            title : "$parent_title", // 分享标题
+            link  : "http:///wx/init_cate2?parent_id=$parent_id", // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: "http:///static/image/logo.png?v=1", // 分享图标
+            success : function () {}
+        });
+
+    });
+
+    $$('.slide-out-div').tabSlideOut({
+        tabHandle: '.handle',                     //class of the element that will become your tab
+        pathToTabImage: '/static/image/help.jpg?v=0.1', //path to the image for the tab //Optionally can be set using css
+        imageHeight: '120px',                     //height of tab image           //Optionally can be set using css
+        imageWidth: '30px',                       //width of tab image            //Optionally can be set using css
+        tabLocation: 'left',                      //side of screen where tab lives, top, right, bottom, or left
+        speed: 300,                               //speed of animation
+        action: 'click',                          //options: 'click' or 'hover', action to trigger animation
+        topPos: '150px',                          //position from the top/ use if tabLocation is left or right
+        leftPos: '50px',                          //position from left/ use if tabLocation is bottom or top
+        fixedPosition: false                      //options: true makes it stick(fixed position) on scroll
+    });
+});
+</script> 
+
+<input type="hidden" id="session_id" value="$session_id" />
+<input type="hidden" id="parent_id" value="$parent_id" />
+<input type="hidden" id="page_id" value="$page_id" />
+<input type="hidden" id="page_code_p" value="$page_code" />
+<input type="hidden" id="version" value="" />
+
+<div class="top_header">
+
+<h4 class="text-center"><span id="page_code"></span> - <span id="page_name"></span></h4>
+
+</div>
+
+<div class="sidebars">
+<div class="sidebar left" style="z-index:999">
+<table class="table">
+    <thead>
+      <tr>
+        <th><span>目录</span><span style="float: right;"><a href="#" id="bar_close">&lt;&lt;&lt;</a>&nbsp;&nbsp;&nbsp;</span></th>
+      </tr>
+    </thead>
+    <tbody id="table_body">
+    </tbody>
+</table>
+</div>
+
+<div class="sidebar top" style="z-index:1">
+    <span>💡提示：双击节点或点击“&#x2295;”展开下一级节点</span>
+    <span style="float: right;"><a href="#" onclick='$$(".sidebar.top").trigger("sidebar:close", [{ speed: 300 }]);'>[关闭]</a></span>
+</div>
+
+<div class="sidebar bottom" style="z-index:998">
+    <div id="note_title"></div>
+    <div id="note_text"></div>
+</div>
+</div>
+
+<div id="frame">
+
+<div class="row" id="paper_layout">
+    <div class="col-sm-12">
+        <div id="paper"></div>
+        <div id="note"></div>
+    </div>
+</div>
+
+<!--div class="row">
+    <div class="col-sm-3">
+        <button type="button" class="btn btn-default btn-sm" onclick="history.go(-1);">返回</button>
+    </div>
+</div-->
+
+
+<!--灰色遮罩层 begin-->
+
+<div class="floatLayer" style="display: none;">
+    <div class="liadloging">
+        <div class="text-center">
+            <img height="40px" src="/static/image/ajax-loader.gif"/>
+        </div>
+    </div>
+</div> 
+
+<!--灰色遮罩层 end-->
+
+
+<div>
+    <a href="/wx/cate2_init?session_id=$session_id" class="float">
+        <span style="margin-top: 15px; display: inline-block; ">首页</span>
+    </a>
+    <a href="#" class="float2" id="bar_open">
+        <span style="margin-top: 15px; display: inline-block; ">目录</span>
+    </a>
+</div>
+
+<!-- 侧栏帮助说明 -->
+<div class="slide-out-div" id="slide-out-div" style="display: none;">
+    <a class="handle" href="#">Content</a>
+    <h4>使用提示：</h4>
+    <ul>
+        <li>双击节点或点击“&#x2295;”展开下一级节点</li>
+        <li>单击标注查看详细注释</li>
+        <li>将手机横屏，使用效果更佳</li>
+    </ul>
+</div>
+
+</div>
+
+</body>
+</html>
+
+

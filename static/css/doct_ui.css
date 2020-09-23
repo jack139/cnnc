@@ -1,0 +1,98 @@
+.joint-type-devs text {
+    /* text-transform: uppercase; */
+    font-weight: 100;
+    font-family: "Microsoft YaHei", Arial;
+}
+
+.joint-type-devs .body {
+    fill: #0066CC;
+    /*stroke: #0066CC;*/
+    stroke-width: 1px;
+}
+
+.joint-type-devs .label {
+    fill: #ffffff;
+    font-size: 14px;
+}
+
+.joint-type-devs .port-body {
+    stroke: #ffffff;
+    stroke-width: 2px;
+    fill: #7c68fc;
+    r: 5;
+    display: none;
+}
+
+.joint-type-devs .port-body:hover {
+    opacity: 1;
+    fill: #ff7e5d;
+}
+
+.joint-type-devs .port-label {
+    fill: #7c68fc;
+    text-decoration: none;
+    display: none;
+}
+
+/*
+.joint-type-devs.joint-type-devs-atomic .body {
+    stroke: #feb663;
+}
+
+.joint-type-devs.joint-type-devs-atomic .label {
+    fill: #feb663;
+}
+*/
+
+/* links */
+
+.joint-link .connection {
+    stroke: #0066CC;
+    stroke-width: 2px;
+}
+
+/* highlighting */
+
+.highlighted-parent .body {
+    stroke: #fe854f;
+    transition: stroke 1s;
+}
+
+.highlighted-parent .label {
+    fill: #fe854f;
+    transition: fill 1s;
+    text-decoration: underline;
+}
+
+.joint-type-devs .joint-highlight-stroke {
+    stroke: #ff7e5d;
+    stroke-width: 3px;
+    pointer-events: none;
+}
+
+/* disable dragging */
+.connection-wrap {
+    display: none
+}
+
+.marker-arrowhead {
+    display: none
+}
+
+.link-tools {
+    display: none
+}
+
+.marker-vertices {
+    display: none
+}
+
+.element.basic.Rect {
+    cursor: auto
+}
+
+
+/*遮罩层 begin */
+.floatLayer{ width:100%; height:100%; position:fixed; background:#000;  z-index:9990; top:0px; left:0px;filter:alpha(Opacity=50);-moz-opacity:0.30;opacity: 0.30;}
+.liadloging{ width:100%; height:auto; position:absolute; top:45%; left:auto; z-index:9995;  }
+/*遮罩层 begin*/

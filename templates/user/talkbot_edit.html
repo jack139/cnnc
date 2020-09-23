@@ -1,0 +1,89 @@
+$def with (name, str1, sku)
+
+$var title: 聊天机器人语料库管理
+$var css: 
+$var name: $'|'.join(str1) $name
+$var js: 
+$var load: 
+$var menu: #plat5
+
+$if sku['rule_id']=='n/a':
+    <div class="caption"><h2>新建对话</h2></div>
+$else:
+    <div class="caption"><h2>修改对话</h2></div>
+
+<form name="new_sku" id="new_sku" method="post" action="/plat/talkbot_edit">
+<input type="hidden" name="rule_id" value="$sku['rule_id']"/>
+
+<table class="props_tb">
+<thead>
+    <tr class="even">
+        <th width="10%">项目</th>
+        <th width="60%">内容</th>
+        <th>说明</th>
+    </tr>
+</thead>
+<tbody>
+<tr><td>规则名</td><td>
+    <input type="text" name="rule_name" id="rule_name" value="$sku.get('rule_name', '')"/>
+    </td><td></td></tr>
+
+<tr><td>提问</td><td>
+    <textarea rows="8" cols="80" name="question">$sku.get('question', '')</textarea>
+    </td><td>多个提问内容使用竖线“|”分割，问题内不要有回车换行，回车换行可以在竖线前后。</td></tr>
+
+<tr><td>回复类型</td><td>
+    <input type="radio" name="reply_type" value="0"
+        checked="checked"
+    /> 文本信息
+    </td><td></td></tr>
+
+<tr><td>回答</td><td>
+    <textarea rows="8" cols="80" name="reply">$sku.get('reply', '')</textarea>
+    </td>
+    <td>多个回答内容使用竖线“|”分割，回答内容里不要有回车换行，回车换行可以在竖线前后。
+    </td></tr>
+
+<tr><td>状态</td><td>
+    <input type="radio" name="available" value="1"
+    $if int(sku.get('available','0'))==1:
+        checked="checked"
+    /> 使用
+    <input type="radio" name="available" value="0"
+    $if int(sku.get('available','0'))==0:
+        checked="checked"
+    /> 停用
+    </td><td></td></tr>
+
+</tbody></table>
+
+<p><input type="submit" name="submit" id="submit" value="保存"/>
+    <input type="button" name="remove" id="remove_button" value="删除" />
+<input type="button" name="cancel" value="返回" onclick="history.go(-1);" /><p>
+</form>
+
+
+<div class="article_box">
+  <div>操作日志：</div>
+  <textarea rows="8" cols="80" id="history">
+  $for h in sku.get('history',[]):
+      $h[0]，用户：$h[1]，操作：$h[2]；
+  </textarea>
+</div>
+
+<br/>
+
+<script type="text/javascript">
+$$(function(){
+
+    $$('#remove_button').click(function(){
+      alertify.confirm("删除对话", "确定要删除此对话吗？",
+          function(){
+            window.location = "/plat/talkbot_remove?rule_id=$sku['rule_id']";
+          },
+          function(){ }
+      );         
+    });
+
+});
+</script>

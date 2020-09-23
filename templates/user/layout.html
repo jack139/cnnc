@@ -1,0 +1,95 @@
+$def with (content)
+
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>$content.title - cnnc robot</title>
+    <link rel="stylesheet" href="/static/css/layout2.css?ver=1.01" />
+    <link rel="stylesheet" href="/static/css/alertify.min.css" />
+    <link rel="stylesheet" href="/static/css/themes/default.min.css" />
+    <script type="text/javascript" src="/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/alertify.min.js?ver=1.5"></script>
+    $if content.css:
+          $for f in content.css.split():
+            <link rel="stylesheet" href="$f" />
+
+    $if content.js:
+          $for f in content.js.split():
+            <script type="text/javascript" src="$f"></script>
+</head>
+<body class="side_body">
+<div class="wrapper">
+
+<script type="text/javascript">
+$$(function () {
+    $$("$:content.menu").addClass("current");
+    $$("$:content.menu".substr(0,5)).show();
+    $if content.load: 
+        $:content.load
+});
+
+function show_menu(id){
+    if ($$(id).is(":visible")) $$(id).hide();
+    else $$(id).show(); 
+    return false;
+}
+</script>   
+
+<div class="slidebar">
+    <div class="top_box" id="topBox">
+    <div><img height="50" src="/static/image/logo.png" /></div>
+    $if len(content.name)>0:
+        <div class="user">用户 $content.name.split()[1]</div>
+    </div>
+    
+<ul class="menu_left">
+    <li id="home"><a href="/">首页</a></li>
+
+    $if u'DATA_MODIFY' in content.name or u'TALKBOT' in content.name or u'TNM_DATA' in content.name:
+        <li><a href="#" onclick="return show_menu('#plat');">平台管理</a></li>
+    <ul class="menu_left2" id="plat" style="display:none;">
+    $if u'DATA_MODIFY' in content.name :
+        <li id="plat1"><a href="/plat/pages">　　规则树页面</a></li>
+        <li id="plat3"><a href="/plat/notes">　　注释</a></li>
+
+    $if u'TNM_DATA' in content.name :
+        <li id="plat6"><a href="/plat/tnm">　　TNM分期</a></li>
+
+    $if u'TALKBOT' in content.name :
+        <li id="plat4"><a href="/plat/bayes">　　关键词回复规则</a></li>
+        <li id="plat5"><a href="/plat/talkbot">　　聊天机器人语料库</a></li>
+        <li id="plat9"><a href="/plat/index_news">　　微官网滚动消息</a></li>
+    </ul>
+
+    $if u'DOCTOR_USE' in content.name:
+        <li><a href="#" onclick="return show_menu('#doct');">医生应用</a></li>
+    <ul class="menu_left2" id="doct" style="display:none;">
+    $if u'DOCTOR_USE' in content.name:
+        <li id="doct1"><a href="/doct/diagnose">　　医生诊断</a></li>
+    </ul>
+
+    <li id="seti"><a href="/settings_user">帐户设置</a><li>
+    <li><a href="/logout">退出</a><li>
+</ul>
+</div>
+
+<div class="content">
+
+<!-- main content start here -->
+$:content
+<!-- main content end here -->
+    
+<div class="footer">
+        <p>copyright &copy; 2017-2020 jack139</p>
+</div>
+
+</div>    
+
+</div>
+
+    
+</body>
+</html>
+
+

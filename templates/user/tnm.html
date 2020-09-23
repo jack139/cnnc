@@ -1,0 +1,71 @@
+$def with (name, str1, skus, pages, search_tnm_name, current_page, cancer_category_list)
+
+$var title: TNM分期数据管理
+$var css:
+$var js:
+$var name: $'|'.join(str1) $name
+$var load:
+$var menu: #plat6
+
+<div class="caption"><h2>TNM分期数据管理</h2></div>
+
+
+<div class="article_box">
+    <span><a class="abtn" href="/plat/tnm?page=$current_page&tnm_name=$search_tnm_name">刷新页面</a></span>&nbsp;&nbsp;
+    <span><a class="abtn" href="/plat/tnm_edit">新建分期</a></span>&nbsp;&nbsp;
+    <span style="float: right;">查找内容：<input type="text" id="tnm_name" value="" />
+    <input type="button" id="search" value="搜索" /></span>
+</div>
+
+<script type="text/javascript">
+$$(function(){
+    $$('#search').click(function(){
+        var tnm_name = encodeURIComponent($$("#tnm_name").val());
+
+        location="/plat/tnm?tnm_name="+tnm_name;
+    });
+});
+</script>
+
+<table class="props_tb">
+<thead>
+    <tr class="even">
+        <th>肿瘤分类</th>
+        <th width="20%">病种</th>
+        <th>子类1</th>
+        <th>子类2</th>
+        <th>版本</th>
+        <th>适用于</th>
+        <th>排序权重</th>
+        <th>状态</th>
+    </tr>
+</thead>
+<tbody>
+
+$for u in skus:
+    <tr>
+        <td>$cancer_category_list[u.get('cancer_category','')][1]</td>
+        <td><a href="/plat/tnm_edit?rule_id=$u['_id']">$u['tnm_name']</a>
+            $if u.get('node_question')==True:
+                <span style="color:red;">???</span>
+        </td>
+        <td>$u.get('tnm_subname1','')</td>
+        <td>$u.get('tnm_subname2','')</td>
+        <td>$u.get('version','')</td>
+        <td>$u.get('use_at','')[:30]...</td>
+        <td>$u.get('weight','')</td>
+        <td>$('在使用' if u['available']==1 else '停用')</td>
+    </tr>
+
+</tbody>
+</table>
+
+<br/>
+<div class="article_box">
+    页码：
+    $for x in pages:
+        $if x!=current_page:
+            <a href="/plat/tnm?page=$x&tnm_name=$search_tnm_name">$(x+1)</a>&nbsp;&nbsp;
+        $else:
+            <b>$(x+1)</b>&nbsp;&nbsp;
+</div>

@@ -1,0 +1,38 @@
+$def with (name, str1, skus, pages)
+
+$var title: 医生诊断
+$var css:
+$var js:
+$var name: $'|'.join(str1) $name
+$var load:
+$var menu: #doct1
+
+<div class="caption"><h2>医生诊断</h2></div>
+
+
+<table class="props_tb">
+<thead>
+  <tr class="even">
+    <th width="30%">页面编号</th>
+    <th>页面说明</th>
+  </tr>
+</thead>
+<tbody>
+
+$for u in skus:
+  <tr>
+  <td>
+    <a href="/doct/robotic?page_id=$u['_id']">$u['page_code']</a>
+  </td>
+  <td>$u.get('page_name','')</td>
+  </tr>
+
+</tbody>
+</table>
+
+<br/>
+<div class="article_box">
+    页码：
+    $for x in pages:
+        <a href="/plat/pages?page=$x">$(x+1)</a>&nbsp;&nbsp;
+</div>

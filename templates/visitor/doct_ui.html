@@ -1,0 +1,76 @@
+$def with (page)
+
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta content="" name="description">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="format-detection" content="telephone=no">
+        <title></title>
+        <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="/static/css/alertify.min.css" />
+        <link rel="stylesheet" type="text/css" href="/static/js/jointjs/joint.min.css" />
+        <link rel="stylesheet" type="text/css" href="/static/css/doct_ui.css" />
+        <script type="text/javascript" src="/static/js/alertify.min.js"></script>     
+        <style>
+            body{font-family:"Microsoft YaHei",Arial; overflow-x:hidden; overflow-y:auto; margin: 5px 5px 5px 5px;}
+        </style>
+    </head>
+<body>
+
+<h4 class="text-center">$page['page_code'] - <span id="page_name">$page['page_name']</span></h4>
+
+<input type="hidden" id="start_node" name="start_node" value="$page['start_node']" />
+<div id="hidden_page_name" style="display: none;">$:page['page_name']</div>
+
+<div class="row" id="paper_layout">
+    <div class="col-sm-12">
+        <div id="paper" style="border:1px solid black;"></div>
+    </div>
+</div>
+
+<!-- Dependencies: -->
+<script type="text/javascript" src="/static/js/jointjs/jquery.min.js"></script>
+<script type="text/javascript" src="/static/js/jointjs/lodash.min.js"></script>
+<script type="text/javascript" src="/static/js/jointjs/backbone-min.js"></script>
+<script type="text/javascript" src="/static/js/jointjs/joint.min.js"></script>
+
+<script type="text/javascript" src="/static/js/ui_helper.js?v=1.00"></script>
+<script type="text/javascript" src="/static/js/doct_ui.js?v=1.02"></script>
+
+
+<div class="row">
+    <h5 class="col-sm-2"><b>说明</b></h5>
+    <div class="col-sm-10">
+        <div id="prop"></div>
+        <div id="note"></div>
+    </div>
+</div>
+
+<br/>
+
+<div class="row">
+    <div class="col-sm-3">
+        <button type="button" class="btn btn-default btn-sm" onclick="history.go(-1);">返回</button>
+    </div>
+</div>
+
+
+<!--灰色遮罩层 begin-->
+
+<div class="floatLayer" style="display: none;">
+    <div class="liadloging">
+        <div class="text-center">
+            <img height="40px" src="/static/image/ajax-loader.gif"/>
+        </div>
+    </div>
+</div> 
+
+<!--灰色遮罩层 end-->
+
+</body>
+</html>
+
+

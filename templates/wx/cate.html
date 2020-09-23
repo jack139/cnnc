@@ -1,0 +1,152 @@
+$def with (session_id, parent_id='', parent_title='', signature={})
+
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta content="" name="description">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <meta name="format-detection" content="telephone=no">
+        <title></title>
+        <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="/static/css/alertify.min.css" />
+        <link rel="stylesheet" type="text/css" href="/static/css/doct_ui2.css?v=0.06" />
+        <script type="text/javascript" src="/static/js/jointjs/jquery.min.js"></script>
+        <script type="text/javascript" src="/static/js/alertify.min.js"></script>     
+        <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+        <script type="text/javascript" src="/static/js/wx/ui_helper.min.js?v=1.04"></script>     
+        <script type="text/javascript" src="/static/js/wx/cate.min.js?v=1.02"></script>     
+        <style>
+            body{font-family:"Microsoft YaHei",Arial; overflow-x:hidden; overflow-y:auto; margin: 5px 5px 5px 5px;}
+        </style>
+    </head>
+<body>
+
+<script type="text/javascript">
+$$(function () { // 关闭分享
+    wx.config({
+        debug     : false, // 开启调试模式,
+        appId     : "$signature['appid']", // 必填，公众号的唯一标识
+        timestamp : "$signature['timestamp']", // 必填，生成签名的时间戳
+        nonceStr  : "$signature['nonceStr']", // 必填，生成签名的随机串
+        signature : "$signature['sign']",// 必填，签名
+        jsApiList : [
+            "hideMenuItems",
+            "updateAppMessageShareData",
+            "updateTimelineShareData",
+            "onMenuShareTimeline",
+            "onMenuShareAppMessage",
+        ], // 必填，需要使用的JS接口列表
+    });
+
+    wx.ready(function () {
+        wx.hideMenuItems({
+            menuList: [ 
+                "menuItem:share:appMessage",
+                "menuItem:share:timeline",
+                "menuItem:share:qq", 
+                "menuItem:share:weiboApp",
+                "menuItem:share:facebook", 
+                "menuItem:share:QZone",
+                "menuItem:favorite",
+                "menuItem:originPage",
+                "menuItem:openWithQQBrowser",
+                "menuItem:openWithSafari",
+                "menuItem:share:email",
+                "menuItem:share:brand",
+                "menuItem:copyUrl",
+            ] // 只能隐藏“传播类”和“保护类”按钮
+        });
+
+
+        wx.onMenuShareAppMessage({ 
+            title : "$parent_title", // 分享标题
+            desc  : "无需关注公众号！还免费的哦！", // 分享描述
+            link  : "http:///wx/init_cate2?parent_id=$parent_id", // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: "http:///static/image/logo.png?v=1", // 分享图标
+            success : function () {}
+        });
+
+        wx.onMenuShareTimeline({ 
+            title : "$parent_title", // 分享标题
+            link  : "http:///wx/init_cate2?parent_id=$parent_id", // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: "http:///static/image/logo.png?v=1", // 分享图标
+            success : function () {}
+        });
+
+        wx.updateAppMessageShareData({ 
+            title : "$parent_title", // 分享标题
+            desc  : "无需关注公众号！还免费的哦！", // 分享描述
+            link  : "http:///wx/init_cate2?parent_id=$parent_id", // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: "http:///static/image/logo.png?v=1", // 分享图标
+            success : function () {}
+        });
+
+        wx.updateTimelineShareData({ 
+            title : "$parent_title", // 分享标题
+            link  : "http:///wx/init_cate2?parent_id=$parent_id", // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: "http:///static/image/logo.png?v=1", // 分享图标
+            success : function () {}
+        });
+
+    });
+});
+</script> 
+
+
+<input type="hidden" id="session_id" value="$session_id" />
+<input type="hidden" id="parent_id" value="$parent_id" />
+
+$if parent_title=='':
+    <h5 class="text-center" id="h4_title">
+    </h5>
+    <h4 class="text-center" style="color:#ff0000;">
+    </h4>
+$else:
+    <h4 class="text-center" id="h4_title">
+        $parent_title
+    </h4>
+
+<table class="table">
+    <thead>
+      <tr>
+        <th>目录</th>
+      </tr>
+    </thead>
+    <tbody id="table_body">
+    </tbody>
+</table>
+
+
+<div class="row" id="div_return" style="display:none;">
+    <div class="col-sm-3">
+        <button type="button" class="btn btn-default btn-sm" onclick="history.go(-1);">返回</button>
+    </div>
+</div>
+
+<!--灰色遮罩层 begin-->
+
+<div class="floatLayer" style="display: none;">
+    <div class="liadloging">
+        <div class="text-center">
+            <img height="40px" src="/static/image/ajax-loader.gif"/>
+        </div>
+    </div>
+</div> 
+
+<!--灰色遮罩层 end-->
+
+<br/>
+        <center>
+        <div id="desc_page"></div>
+        <script>
+            document.getElementById("desc_page").innerHTML='<object type="text/html" data="/static/desc2.html" style="height: 800px;width: 85%;"></object>';
+        </script>
+        </center>
+<br/>
+
+</body>
+</html>
+
+

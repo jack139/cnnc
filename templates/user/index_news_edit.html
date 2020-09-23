@@ -1,0 +1,113 @@
+$def with (name, str1, sku)
+
+$var title: 微官网首页滚动消息管理
+$var css: /static/js/summernote/summernote-lite.css 
+$var name: $'|'.join(str1) $name
+$var js: /static/js/summernote/summernote-lite.js /static/js/summernote/lang/summernote-zh-CN.js
+$var load: 
+$var menu: #plat9
+
+$if sku['news_id']=='n/a':
+    <div class="caption"><h2>新建消息</h2></div>
+$else:
+    <div class="caption"><h2>修改消息</h2></div>
+
+<form name="new_sku" id="new_sku" method="post" action="/plat/index_news_edit">
+<input type="hidden" name="news_id" value="$sku['news_id']"/>
+<input type="hidden" name="news_text" id="news_text" value="$sku.get('news_text','')"/>
+
+<table class="props_tb">
+<thead>
+    <tr class="even">
+        <th width="10%">项目</th>
+        <th width="60%">内容</th>
+        <th>说明</th>
+    </tr>
+</thead>
+<tbody>
+<tr><td>标题</td><td>
+    <input type="text" name="news_title" id="news_title" value="$sku.get('news_title', '')"/>
+    </td><td></td></tr>
+
+<tr><td>类型</td><td>
+    <input type="radio" name="news_type" value="0"
+    $if int(sku.get('news_type','0'))==0:
+        checked="checked"
+    /> 纯文本
+    <input type="radio" name="news_type" value="1"
+    $if int(sku.get('news_type','0'))==1:
+        checked="checked"
+    /> 网页链接
+    <input type="radio" name="news_type" value="2"
+    $if int(sku.get('news_type','0'))==2:
+        checked="checked"
+    /> 内容文本
+    </td><td></td></tr>
+
+<tr><td>链接地址</td><td>
+    <input type="text" name="news_link" id="news_link" value="$sku.get('news_link', '')"/>
+    </td><td>纯文本和内容文本不需要输入网址，网页链接需要输入网址，必须带http://或https://</td></tr>
+
+<tr><td>状态</td><td>
+    <input type="radio" name="available" value="1"
+    $if int(sku.get('available','0'))==1:
+        checked="checked"
+    /> 发布
+    <input type="radio" name="available" value="0"
+    $if int(sku.get('available','0'))==0:
+        checked="checked"
+    /> 未发布
+    </td><td></td></tr>
+
+</tbody></table>
+
+<div>
+    <div>文本内容：（可不填）</div>
+      <div id="summernote" style="width:90%;clean:both;">
+    </div>
+</div>
+
+<p><input type="submit" name="submit" id="submit" value="保存"/>
+    <input type="button" name="remove" id="remove_button" value="删除" />
+<input type="button" name="cancel" value="返回" onclick="history.go(-1);" /><p>
+</form>
+
+
+<div class="article_box">
+  <div>操作日志：</div>
+  <textarea rows="8" cols="80" id="history">
+  $for h in sku.get('history',[]):
+      $h[0]，用户：$h[1]，操作：$h[2]；
+  </textarea>
+</div>
+
+<br/>
+
+<script type="text/javascript">
+$$('#summernote').summernote({
+    placeholder: '输入文本内容',
+    tabsize: 4,
+    height: 200,
+    lang: 'zh-CN'
+});
+
+$$(function(){
+    $$('#remove_button').click(function(){
+      alertify.confirm("删除消息", "确定要删除此首页滚动消息吗？",
+          function(){
+            window.location = "/plat/index_news_remove?news_id=$sku['news_id']";
+          },
+          function(){ }
+      );         
+    });
+
+    var news_text = $$("#news_text").val();
+    $$('#summernote').summernote("code", news_text);
+
+    $$('#submit').click(function(){
+        var news_text = $$('#summernote').summernote('code');
+        $$("#news_text").val(news_text);
+        $$("form#new_sku").submit();
+    });
+});
+</script>

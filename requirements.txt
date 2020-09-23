@@ -1,0 +1,10 @@
+uwsgi
+web.py
+flup
+pymongo
+urllib3
+captcha
+jieba
+numpy==1.13
+scipy==0.19
+gensim

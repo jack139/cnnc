@@ -1,0 +1,380 @@
+$def with (name, str1, sku, tnm_data, stage_data, cancer_category_list, correct_data)
+
+$var title: TNM分期数据管理
+$var css: /static/js/summernote/summernote-lite.css 
+$var name: $'|'.join(str1) $name
+$var js: /static/js/tnm_edit.js?v=1.14 /static/js/summernote/summernote-lite.js /static/js/summernote/lang/summernote-zh-CN.js
+$var load: do_first()
+$var menu: #plat6
+
+<style type="text/css">
+    .start_from_left {text-align: left;padding-left: 10px;}
+</style>
+
+<script type="text/javascript">
+    function do_first(){
+        $if len(tnm_data)>0:
+            tnm_rec=$:tnm_data;
+
+        $if len(stage_data)>0:
+            stage_rec=$:stage_data;
+
+        init_something();
+
+        /* init rich_text input */
+        $$('#summernote').summernote({
+            placeholder: '输入文本内容',
+            tabsize: 4,
+            height: 200,
+            lang: 'zh-CN'
+        });
+
+        var rich_text = $$("#rich_text").val();
+        $$('#summernote').summernote("code", rich_text);
+
+        $$('#summernote_t').summernote({
+            placeholder: '备注或其他说明内容（可不填）',
+            tabsize: 4,
+            height: 100,
+            lang: 'zh-CN'
+        });
+
+        var rich_text = $$("#t_memo").val();
+        $$('#summernote_t').summernote("code", rich_text);
+
+        $$('#summernote_n').summernote({
+            placeholder: '备注或其他说明内容（可不填）',
+            tabsize: 4,
+            height: 100,
+            lang: 'zh-CN'
+        });
+
+        var rich_text = $$("#n_memo").val();
+        $$('#summernote_n').summernote("code", rich_text);
+
+        $$('#summernote_m').summernote({
+            placeholder: '备注或其他说明内容（可不填）',
+            tabsize: 4,
+            height: 100,
+            lang: 'zh-CN'
+        });
+
+        var rich_text = $$("#m_memo").val();
+        $$('#summernote_m').summernote("code", rich_text);
+
+        $$('#summernote_g').summernote({
+            placeholder: '备注或其他说明内容（可不填）',
+            tabsize: 4,
+            height: 100,
+            lang: 'zh-CN'
+        });
+
+        var rich_text = $$("#g_memo").val();
+        $$('#summernote_g').summernote("code", rich_text);
+
+    }
+
+</script>
+
+$if sku['rule_id']=='n/a':
+    <div class="caption"><h2>新建分期数据</h2></div>
+$else:
+    <div class="caption"><h2>修改分期数据</h2></div>
+
+<form name="new_sku" id="new_sku" method="post" action="">
+<input type="hidden" name="rule_id" id="rule_id" value="$sku['rule_id']"/>
+<input type="hidden" name="rich_text" id="rich_text" value="$sku.get('rich_text','')"/>
+<input type="hidden" name="t_memo" id="t_memo" value="$sku.get('t_memo','')"/>
+<input type="hidden" name="n_memo" id="n_memo" value="$sku.get('n_memo','')"/>
+<input type="hidden" name="m_memo" id="m_memo" value="$sku.get('m_memo','')"/>
+<input type="hidden" name="g_memo" id="g_memo" value="$sku.get('g_memo','')"/>
+
+<table class="props_tb">
+<thead>
+    <tr class="even">
+        <th width="15%">项目</th>
+        <th width="60%">内容</th>
+        <th >说明</th>
+    </tr>
+</thead>
+<tbody>
+
+<tr><td>肿瘤分类</td><td>
+    <select name="cancer_category">
+        <option value="">-- 请选择 --</option>
+        $for i in cancer_category_list:
+            <option value="$i[0]"
+                $if sku.get('cancer_category', '')==i[0]:
+                    selected="selected" 
+            >$i[1][1]</option>
+    </select>
+    </td><td></td></tr>
+
+<tr><td>病种</td><td>
+    <input type="text" name="tnm_name" id="tnm_name" value="$sku.get('tnm_name', '')"/>
+    </td><td></td></tr>
+
+<tr><td>子类1</td><td>
+    <input type="text" name="tnm_subname1" id="tnm_subname1" value="$sku.get('tnm_subname1', '')" size="50"/>
+    </td><td></td></tr>
+
+<tr><td>子类2</td><td>
+    <input type="text" name="tnm_subname2" id="tnm_subname2" value="$sku.get('tnm_subname2', '')" size="50"/>
+    </td><td></td></tr>
+
+
+<tr><td>版本信息</td><td>
+    <input type="radio" name="version" value="7"
+    $if sku.get('version','8')=='7':
+        checked="checked"
+    /> 第7版
+    <input type="radio" name="version" value="8"
+    $if sku.get('version','8')=='8':
+        checked="checked"
+    /> 第8版
+    </td><td></td></tr>
+
+
+<tr><td>适用于</td><td>
+    <textarea rows="3" cols="50" name="use_at" id="use_at">$sku.get('use_at', '')</textarea>
+    </td><td></td></tr>
+
+<tr><td rowspan="2">T -- 原发肿瘤</td><td>
+    <div class="start_from_left"><a class="abtn" href="#" id="T_add">新增</a></div>
+    <div id="T_list"></div>
+    </td><td>高亮显示的词使用花括号 {} 括起来, 用户点击时将选中此条目； 
+        跳转到页面“@(页面编码)”；
+        跳转到网页链接“@(网址链接)”；
+        注释使用方括号 [] 括起来，内填注释编码。
+    </td></tr>
+
+<tr><td colspan="2" style="text-align: left;">
+    <div id="summernote_t" style="width:80%;clean:both;"></div>
+    </td></tr>
+
+
+<tr><td rowspan="2">N -- 区域淋巴结</td><td>
+    <div class="start_from_left"><a class="abtn" href="#" id="N_add">新增</a></div>
+    <div id="N_list"></div>
+    </td><td></td></tr>
+
+<tr><td colspan="2" style="text-align: left;">
+    <div id="summernote_n" style="width:80%;clean:both;"></div>
+    </td></tr>
+
+<tr><td rowspan="2">M -- 远处转移</td><td>
+    <div class="start_from_left"><a class="abtn" href="#" id="M_add">新增</a></div>
+    <div id="M_list"></div>
+    </td><td></td></tr>
+
+<tr><td colspan="2" style="text-align: left;">
+    <div id="summernote_m" style="width:80%;clean:both;"></div>
+    </td></tr>
+
+<tr><td rowspan="2">G -- 组织学分级/分化程度/肿瘤分级</td><td>
+    <div class="start_from_left"><a class="abtn" href="#" id="G_add">新增</a></div>
+    <div id="G_list"></div>
+    </td><td>食管癌/食管与胃食管交界处肿瘤， 阑尾肿瘤， 四肢和躯干软组织肉瘤， 乳腺肉瘤， 
+      乳腺叶状肿瘤， 腹部和胸腔内脏器官软组织肉瘤， 腹膜后软组织肉瘤， 胆囊肉瘤， 肾肉瘤， 前列腺癌</td></tr>
+
+<tr><td colspan="2" style="text-align: left;">
+    <div id="summernote_g" style="width:80%;clean:both;"></div>
+    </td></tr>
+
+<tr><td>L -- 肿瘤位置</td><td>
+    <div class="start_from_left"><a class="abtn" href="#" id="L_add">新增</a></div>
+    <div id="L_list"></div>
+    </td><td>食管癌/食管与胃食管交界处肿瘤</td></tr>
+
+<tr><td>S -- 血清学标记物</td><td>
+    <div class="start_from_left"><a class="abtn" href="#" id="S_add">新增</a></div>
+    <div id="S_list"></div>
+    </td><td>睾丸青春期后生殖细胞肿瘤及恶性性索间质肿瘤</td></tr>
+
+<tr><td>Y -- 年龄</td><td>
+    <div class="start_from_left"><a class="abtn" href="#" id="Y_add">新增</a></div>
+    <div id="Y_list"></div>
+    </td><td>甲状腺肿瘤</td></tr>
+
+<tr><td>PSA值</td><td>
+    <div class="start_from_left"><a class="abtn" href="#" id="PSA_add">新增</a></div>
+    <div id="PSA_list"></div>
+    </td><td>前列腺癌</td></tr>
+
+<tr><td>肿瘤核分裂 (HE)</td><td>
+    <div class="start_from_left"><a class="abtn" href="#" id="HE_add">新增</a></div>
+    <div id="HE_list"></div>
+    </td><td>胃肠道间质瘤</td></tr>
+
+<tr><td>预后风险评估 (RISK)</td><td>
+    <div class="start_from_left"><a class="abtn" href="#" id="RISK_add">新增</a></div>
+    <div id="RISK_list"></div>
+    </td><td>妊娠滋养细胞肿瘤</td></tr>
+
+<tr><td>HER2</td><td>
+    <div class="start_from_left"><a class="abtn" href="#" id="HER2_add">新增</a></div>
+    <div id="HER2_list"></div>
+    </td><td>乳腺癌</td></tr>
+
+<tr><td>ER</td><td>
+    <div class="start_from_left"><a class="abtn" href="#" id="ER_add">新增</a></div>
+    <div id="ER_list"></div>
+    </td><td>乳腺癌</td></tr>
+
+<tr><td>PR</td><td>
+    <div class="start_from_left"><a class="abtn" href="#" id="PR_add">新增</a></div>
+    <div id="PR_list"></div>
+    </td><td>乳腺癌</td></tr>
+
+
+<tr><td>其他说明内容（可不填）</td><td colspan="2" style="text-align: left;">
+    <div id="summernote" style="width:80%;clean:both;"></div>
+    </td></tr>
+
+
+<tr><td><div>分期数据</div><br/>
+    <div><a class="abtn" href="#" id="stage_add">新增</a></div>
+</td><td colspan="2">
+
+    <div style="padding: 0px 10px 5px 10px;">
+    <table class="props_tb" >
+    <thead>
+        <tr class="even">
+            <th>分期</th>
+            <th>T</th>
+            <th>N</th>
+            <th>M</th>
+            <th>G</th>
+            <th>L</th>
+            <th>S</th>
+            <th>Y</th>
+            <th>PSA</th>
+            <th>HE</th>
+            <th>RISK</th>
+            <th>HER2</th>
+            <th>ER</th>
+            <th>PR</th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody id="stage_list">
+    </tbody>
+    </table>
+    </div>
+
+    </td></tr>
+
+<tr><td>排序权重</td><td>
+    <input type="text" name="weight" id="weight" value="$sku.get('weight', '999')"/>
+    </td><td>输入数字，数值越小，排序靠前</td></tr>
+
+<tr><td>分期结果返回项</td><td>
+    <input type="checkbox" name="ret_G" id="ret_G" 
+        $if sku.get('ret_set',{}).get('G')==1:
+            checked="checked"
+    />G &nbsp;
+    <input type="checkbox" name="ret_L" id="ret_L" 
+        $if sku.get('ret_set',{}).get('L')==1:
+            checked="checked"
+    />L &nbsp;
+    <input type="checkbox" name="ret_S" id="ret_S" 
+        $if sku.get('ret_set',{}).get('S')==1:
+            checked="checked"
+    />S &nbsp;
+    <input type="checkbox" name="ret_Y" id="ret_Y" 
+        $if sku.get('ret_set',{}).get('Y')==1:
+            checked="checked"
+    />Y &nbsp;
+    <input type="checkbox" name="ret_PSA" id="ret_PSA" 
+        $if sku.get('ret_set',{}).get('PSA')==1:
+            checked="checked"
+    />PSA &nbsp;
+    <input type="checkbox" name="ret_HE" id="ret_HE" 
+        $if sku.get('ret_set',{}).get('HE')==1:
+            checked="checked"
+    />HE &nbsp;
+    <input type="checkbox" name="ret_RISK" id="ret_RISK" 
+        $if sku.get('ret_set',{}).get('RISK')==1:
+            checked="checked"
+    />RISK &nbsp;
+    <input type="checkbox" name="ret_HER2" id="ret_HER2" 
+        $if sku.get('ret_set',{}).get('HER2')==1:
+            checked="checked"
+    />HER2 &nbsp;
+    <input type="checkbox" name="ret_ER" id="ret_ER" 
+        $if sku.get('ret_set',{}).get('ER')==1:
+            checked="checked"
+    />ER &nbsp;
+    <input type="checkbox" name="ret_PR" id="ret_PR" 
+        $if sku.get('ret_set',{}).get('PR')==1:
+            checked="checked"
+    />PR &nbsp;
+
+    </td><td>默认已包含T, N, M</td></tr>
+
+<tr><td>状态</td><td>
+    <input type="radio" name="available" value="1"
+    $if int(sku.get('available','0'))==1:
+        checked="checked"
+    /> 使用
+    <input type="radio" name="available" value="0"
+    $if int(sku.get('available','0'))==0:
+        checked="checked"
+    /> 停用
+    </td><td></td></tr>
+
+</tbody></table>
+
+<p><input type="button" name="save" id="save_button" value="保存"/>
+    <input type="button" name="copy" id="copy_button" value="复制" />
+    <input type="button" name="remove" id="remove_button" value="删除" />
+    <!--input type="button" name="cancel" value="返回" onclick="window.location='/plat/tnm';" /-->
+    <input type="button" name="cancel" value="返回" onclick="history.go(-1);" />
+<p>
+</form>
+
+<div class="article_box">
+  <div>用户纠错内容： <i>处理完请取消打勾</i> <input id="node_question" type="checkbox" name="node_question"
+        $if sku.get("node_question")==True:
+            checked="checked" 
+        />
+  </div>
+  <textarea rows="8" cols="80" id="history">
+  $for h in correct_data:
+      $h['time_t']，反馈内容：$h['note']；
+  </textarea>
+</div>
+
+<div class="article_box">
+  <div>操作日志：</div>
+  <textarea rows="8" cols="80" id="history">
+  $for h in sku.get('history',[]):
+      $h[0]，用户：$h[1]，操作：$h[2]；
+  </textarea>
+</div>
+
+<br/>
+
+<script type="text/javascript">
+$$(function(){
+
+    $$('#copy_button').click(function(){
+      alertify.confirm("复制分期数据", "确定要复制此分期数据吗？",
+          function(){
+            window.location = "/plat/tnm_copy?rule_id=$sku['rule_id']";
+          },
+          function(){ }
+      );         
+    });
+
+    $$('#remove_button').click(function(){
+      alertify.confirm("删除分期数据", "确定要删除此分期数据吗？",
+          function(){
+            window.location = "/plat/tnm_remove?rule_id=$sku['rule_id']";
+          },
+          function(){ }
+      );         
+    });
+
+});
+</script>

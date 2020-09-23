@@ -1,0 +1,59 @@
+$def with (name, str1, skus, pages, search_news_title, current_page)
+
+$var title: 微官网首页滚动消息管理
+$var css:
+$var js:
+$var name: $'|'.join(str1) $name
+$var load:
+$var menu: #plat9
+
+<div class="caption"><h2>微官网首页滚动消息管理</h2></div>
+
+
+<div class="article_box">
+    <span><a class="abtn" href="/plat/index_news_edit">新建消息</a></span>&nbsp;&nbsp;
+    <span style="float: right;">查找内容：<input type="text" id="news_title" value="" />
+    <input type="button" id="search" value="搜索" /></span>
+</div>
+
+<script type="text/javascript">
+$$(function(){
+    $$('#search').click(function(){
+        var news_title = encodeURIComponent($$("#news_title").val());
+
+        location="/plat/index_news?news_title="+news_title;
+    });
+});
+</script>
+
+<table class="props_tb">
+<thead>
+    <tr class="even">
+        <th width="15%">标题</th>
+        <th>类型</th>
+        <th>发布日期</th>
+        <th>状态</th>
+    </tr>
+</thead>
+<tbody>
+
+$for u in skus:
+    <tr>
+        <td><a href="/plat/index_news_edit?news_id=$u['_id']">$u['news_title']</a></td>
+        <td>$('纯文本' if u['news_type']==0 else ('内容文本' if u['news_type']==2 else '网页链接'))</td>
+        <td>$u['last_tick']</td>
+        <td>$('发布' if u['available']==1 else '未发布')</td>
+    </tr>
+
+</tbody>
+</table>
+
+<br/>
+<div class="article_box">
+    页码：
+    $for x in pages:
+        $if x!=current_page:
+            <a href="/plat/index_news?page=$x&news_title=$search_news_title">$(x+1)</a>&nbsp;&nbsp;
+        $else:
+            <b>$(x+1)</b>&nbsp;&nbsp;
+</div>

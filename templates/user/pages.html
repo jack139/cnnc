@@ -1,0 +1,80 @@
+$def with (name, str1, skus, pages, parent_id, last_dir_id,last_dir_name, current_page)
+
+$var title: 页面管理
+$var css:
+$var js:
+$var name: $'|'.join(str1) $name
+$var load:
+$var menu: #plat1
+
+<div class="caption"><h2>页面管理 - $last_dir_name</h2></div>
+
+
+<p>
+$if parent_id!='':
+    <a href="/plat/pages?parent_id=$last_dir_id">上一层目录</a>&nbsp;&nbsp;
+<a class="abtn" href="/plat/dir_edit?parent_id=$parent_id">新建目录</a>&nbsp;&nbsp;
+<a class="abtn" href="/plat/page_edit?parent_id=$parent_id">新建页面</a>&nbsp;&nbsp;
+<a class="abtn" href="/plat/link_edit?parent_id=$parent_id">新建页面链接</a>
+</p>
+
+<table class="props_tb">
+<thead>
+    <tr class="even">
+        <th width="15%">页面编号</th>
+        <th width="15%"> </th>
+        <th width="15%">版本说明</th>
+        <th width="40%">页面说明</th>
+        <th>诊断入口</th>
+        <th>排序权重</th>
+        <th>状态</th>
+    </tr>
+</thead>
+<tbody>
+
+$for u in skus:
+    <tr>
+    $if u.get('page_type', 0)==1:
+        <td><img src="/static/image/folder.png" height="15" /> <a href="/plat/pages?parent_id=$u['_id']">$u['dir_name']</a></td>
+        <td><a href="/plat/dir_edit?page_id=$u['_id']" class="abtn">修改</a>
+            $if u['node_question']>0:
+                <span style="color:red;">???</span>
+        </td>
+        <td>$u.get('dir_note','')</td>
+        <td></td>
+        <td></td>
+        <td>$u.get('weight','')</td>
+        <td>$('可使用' if u['available']==1 else '停用')</td>    
+    $elif u.get('page_type', 0)==2:
+        <td><img src="/static/image/link.png" height="15" />$u['link_name']</td>
+        <td><a href="/plat/link_edit?page_id=$u['_id']" class="abtn">修改</a></td>
+        <td></td>
+        <td>$u.get('link_note','')</td>
+        <td></td>
+        <td>$u.get('weight','')</td>
+        <td>$('可使用' if u['available']==1 else '停用')</td>    
+    $else:
+        <td><a href="/plat/page_edit?page_id=$u['_id']">$u['page_code']</a></td>
+        <td><a href="/plat/page_map?page_id=$u['_id']" class="abtn">编辑规则树</a>
+            $if u['node_question']>0:
+                <span style="color:red;">???</span>
+        </td>
+        <td>$u.get('version','')</td>
+        <td>$u.get('page_name','')</td>
+        <td>$('是' if u.get('first_page')==1 else '')</td>
+        <td>$u.get('weight','')</td>
+        <td>$('可使用' if u['available']==1 else '停用')</td>
+    </tr>
+
+</tbody>
+</table>
+
+<br/>
+<div class="article_box">
+    页码：
+    $for x in pages:
+        $if x!=current_page:
+            <a href="/plat/pages?page=$x&parent_id=$parent_id">$(x+1)</a>&nbsp;&nbsp;
+        $else:
+            <b>$(x+1)</b>&nbsp;&nbsp;
+</div>

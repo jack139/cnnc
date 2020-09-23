@@ -1,0 +1,306 @@
+$def with (session_id, parent_id, page_id, cate_id, parent_title='', signature={})
+
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta content="" name="description">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <meta name="format-detection" content="telephone=no">
+        <title></title>
+        <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css"/>
+        <link rel="stylesheet" href="/static/css/alertify.min.css" />
+        <link rel="stylesheet" type="text/css" href="/static/css/tnm_ui.css?v=1.10" />
+        <script type="text/javascript" src="/static/js/jointjs/jquery.min.js"></script>
+        <script type="text/javascript" src="/static/js/alertify.min.js"></script>
+        <script type="text/javascript" src="/static/js/jquery.touch.min.js"></script>
+        <script type="text/javascript" src="/static/js/jquery.sidebar.min.js"></script>
+        <script type="text/javascript" src="/static/js/jquery.connections.js?v=0.08"></script>
+        <script type="text/javascript" src="/static/js/jquery.tabSlideOut.v1.3.js?v=1.0"></script>
+        <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+        <script type="text/javascript" src="/static/js/wx/tnm_page.min.js?v=1.06"></script>
+        <script type="text/javascript" src="/static/js/wx/tnm_helper.min.js?v=1.03"></script>
+        <style type="text/css">
+            body{font-family:"Microsoft YaHei",Arial; overflow-x:auto; overflow-y:auto; margin: 5px 5px 5px 5px;background-color: #c0e3e2; /*#e2f5fb;*/}
+            .slide-out-div {
+                padding: 20px;
+                width: 250px;
+                background: #e1e8f0;
+                color: #35455c;
+                border: 1px solid #35455c;
+                z-index: 995;
+            }      
+        </style>
+    </head>
+<body>
+
+<script type="text/javascript">
+$$(function () { // 关闭分享
+    wx.config({
+        debug     : false, // 开启调试模式,
+        appId     : "$signature['appid']", // 必填，公众号的唯一标识
+        timestamp : "$signature['timestamp']", // 必填，生成签名的时间戳
+        nonceStr  : "$signature['nonceStr']", // 必填，生成签名的随机串
+        signature : "$signature['sign']",// 必填，签名
+        jsApiList : [
+            "hideMenuItems",
+            "updateAppMessageShareData",
+            "updateTimelineShareData",
+            "onMenuShareTimeline",
+            "onMenuShareAppMessage",
+        ], // 必填，需要使用的JS接口列表
+    });
+
+    wx.ready(function () {
+        wx.hideMenuItems({
+            menuList: [ 
+                "menuItem:share:appMessage",
+                "menuItem:share:timeline",
+                "menuItem:share:qq", 
+                "menuItem:share:weiboApp",
+                "menuItem:share:facebook", 
+                "menuItem:share:QZone",
+                "menuItem:favorite",
+                "menuItem:originPage",
+                "menuItem:openWithQQBrowser",
+                "menuItem:openWithSafari",
+                "menuItem:share:email",
+                "menuItem:share:brand",
+                "menuItem:copyUrl",
+            ] // 只能隐藏“传播类”和“保护类”按钮
+        });
+
+        wx.onMenuShareAppMessage({ 
+            title : "$parent_title", // 分享标题
+            desc  : "无需关注公众号！还免费的哦！", // 分享描述
+            link  : "http:///wx/init_tnm?parent_id=$parent_id&page_id=$page_id", // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: "http:///static/image/logo.png?v=1", // 分享图标
+            success : function () {}
+        });
+
+        wx.onMenuShareTimeline({ 
+            title : "$parent_title", // 分享标题
+            link  : "http:///wx/init_tnm?parent_id=$parent_id&page_id=$page_id", // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: "http:///static/image/logo.png?v=1", // 分享图标
+            success : function () {}
+        });
+
+        wx.updateAppMessageShareData({ 
+            title : "$parent_title", // 分享标题
+            desc  : "无需关注公众号！还免费的哦！", // 分享描述
+            link  : "http:///wx/init_tnm?parent_id=$parent_id&page_id=$page_id", // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: "http:///static/image/logo.png?v=1", // 分享图标
+            success : function () {}
+        });
+
+        wx.updateTimelineShareData({ 
+            title : "$parent_title", // 分享标题
+            link  : "http:///wx/init_tnm?parent_id=$parent_id&page_id=$page_id", // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: "http:///static/image/logo.png?v=1", // 分享图标
+            success : function () {}
+        });
+
+    });
+
+    $$('.slide-out-div').tabSlideOut({
+        tabHandle: '.handle',                     //class of the element that will become your tab
+        pathToTabImage: '/static/image/help.jpg?v=0.1', //path to the image for the tab //Optionally can be set using css
+        imageHeight: '120px',                     //height of tab image           //Optionally can be set using css
+        imageWidth: '30px',                       //width of tab image            //Optionally can be set using css
+        tabLocation: 'left',                      //side of screen where tab lives, top, right, bottom, or left
+        speed: 300,                               //speed of animation
+        action: 'click',                          //options: 'click' or 'hover', action to trigger animation
+        topPos: '150px',                          //position from the top/ use if tabLocation is left or right
+        leftPos: '50px',                          //position from left/ use if tabLocation is bottom or top
+        fixedPosition: false                      //options: true makes it stick(fixed position) on scroll
+    });
+});
+</script> 
+
+<input type="hidden" id="session_id" value="$session_id" />
+<input type="hidden" id="parent_id" value="$parent_id" />
+<input type="hidden" id="page_id" value="$page_id" />
+<input type="hidden" id="cate_id" value="$cate_id" />
+<input type="hidden" id="version" value="" />
+
+<div class="top_header">
+    <h4 class="text-center"><span id="tnm_name"></span></h4>
+    <div style="text-align: right;font-size: x-small;display: none;" id="version_tag">
+        <i>AJCC 第 <span id="verison_number"></span> 版</i>
+    </div>
+</div>
+
+<div class="sidebars">
+<div class="sidebar left" style="z-index:999">
+<table class="table">
+    <thead>
+      <tr>
+        <th><span>目录</span><span style="float: right;"><a href="#" id="bar_close">&lt;&lt;&lt;</a>&nbsp;&nbsp;&nbsp;</span></th>
+      </tr>
+    </thead>
+    <tbody id="table_body">
+    </tbody>
+</table>
+</div>
+
+<div class="sidebar top" style="z-index:1">
+    <span>💡提示：带下划线的文字可以点击并跳转。</span>
+    <span style="float: right;"><a href="#" onclick='$$(".sidebar.top").trigger("sidebar:close", [{ speed: 300 }]);'>[关闭]</a></span>
+</div>
+
+<div class="sidebar bottom" style="z-index:998">
+    <div id="note_title"></div>
+    <div id="note_text"></div>
+</div>
+</div>
+
+<div id="frame">
+
+<div class="row">
+    <div class="col-sm-12" id="use_at_paper" style="display: none;">
+        <div style="padding-top: 10px;"><span id="use_at"></span></div>
+    </div>
+    <div class="col-sm-12" id="sub_cate_paper" style="margin: 10px 15px 0px 15px;">
+        <div style="text-align: center;display: none;" id="version_select">
+            <select onchange="checkSelect(event);" >
+                <option value="8" selected="selected">第 8 版</option>
+                <option value="7">第 7 版</option>
+            </select>
+        </div>
+        <div id="sub_cate_7" style="display: none;"></div>
+        <div id="sub_cate_8" style="display: none;"></div>
+    </div>
+</div>
+
+<div class="row" id="paper_layout">
+    <div class="col-sm-12">
+        <div id="paper">
+            <div class="prop_tnm" id="nodediv_T_bar" style="display: none;">
+                <span id="nodediv_T_bar_text">原发肿瘤......</span><span id="nodediv_T_title"></span></div>
+            <div id="nodediv_T_tnm" style="display: none;"></div>
+            <div id="nodediv_T_memo" style="display: none;"></div>
+            <div class="prop_tnm" id="nodediv_N_bar" style="display: none;">
+                <span id="nodediv_N_bar_text">区域淋巴结......</span><span id="nodediv_N_title"></span></div>
+            <div id="nodediv_N_tnm" style="display: none;"></div>
+            <div id="nodediv_N_memo" style="display: none;"></div>
+            <div class="prop_tnm" id="nodediv_M_bar" style="display: none;">
+                <span id="nodediv_M_bar_text">远处转移......</span><span id="nodediv_M_title"></span></div>
+            <div id="nodediv_M_tnm" style="display: none;"></div>
+            <div id="nodediv_M_memo" style="display: none;"></div>
+            <div class="prop_tnm" id="nodediv_G_bar" style="display: none;">
+                <span id="nodediv_G_bar_text">肿瘤分级......</span><span id="nodediv_G_title"></span></div>
+            <div id="nodediv_G_tnm" style="display: none;"></div>
+            <div id="nodediv_G_memo" style="display: none;"></div>
+            <div class="prop_tnm" id="nodediv_L_bar" style="display: none;">
+                <span id="nodediv_L_bar_text">肿瘤位置......</span><span id="nodediv_L_title"></span></div>
+            <div id="nodediv_L_tnm" style="display: none;"></div>
+            <div id="nodediv_L_memo" style="display: none;"></div>
+            <div class="prop_tnm" id="nodediv_S_bar" style="display: none;">
+                <span id="nodediv_S_bar_text">血清学标记物......</span><span id="nodediv_S_title"></span></div>
+            <div id="nodediv_S_tnm" style="display: none;"></div>
+            <div id="nodediv_S_memo" style="display: none;"></div>
+            <div class="prop_tnm" id="nodediv_Y_bar" style="display: none;">
+                <span id="nodediv_Y_bar_text">年龄......</span><span id="nodediv_Y_title"></span></div>
+            <div id="nodediv_Y_tnm" style="display: none;"></div>
+            <div id="nodediv_Y_memo" style="display: none;"></div>
+            <div class="prop_tnm" id="nodediv_PSA_bar" style="display: none;">
+                <span id="nodediv_PSA_bar_text">PSA值......</span><span id="nodediv_PSA_title"></span></div>
+            <div id="nodediv_PSA_tnm" style="display: none;"></div>
+            <div id="nodediv_PSA_memo" style="display: none;"></div>
+            <div class="prop_tnm" id="nodediv_HE_bar" style="display: none;">
+                <span id="nodediv_HE_bar_text">肿瘤核分裂......</span><span id="nodediv_HE_title"></span></div>
+            <div id="nodediv_HE_tnm" style="display: none;"></div>
+            <div id="nodediv_HE_memo" style="display: none;"></div>
+            <div class="prop_tnm" id="nodediv_RISK_bar" style="display: none;">
+                <span id="nodediv_RISK_bar_text">预后风险评估......</span><span id="nodediv_RISK_title"></span></div>
+            <div id="nodediv_RISK_tnm" style="display: none;"></div>
+            <div id="nodediv_RISK_memo" style="display: none;"></div>
+
+            <div class="prop_tnm" id="nodediv_HER2_bar" style="display: none;">
+                <span id="nodediv_HER2_bar_text">HER2......</span><span id="nodediv_HER2_title"></span></div>
+            <div id="nodediv_HER2_tnm" style="display: none;"></div>
+            <div id="nodediv_HER2_memo" style="display: none;"></div>
+            <div class="prop_tnm" id="nodediv_ER_bar" style="display: none;">
+                <span id="nodediv_ER_bar_text">ER......</span><span id="nodediv_ER_title"></span></div>
+            <div id="nodediv_ER_tnm" style="display: none;"></div>
+            <div id="nodediv_ER_memo" style="display: none;"></div>
+            <div class="prop_tnm" id="nodediv_PR_bar" style="display: none;">
+                <span id="nodediv_PR_bar_text">PR......</span><span id="nodediv_PR_title"></span></div>
+            <div id="nodediv_PR_tnm" style="display: none;"></div>
+            <div id="nodediv_PR_memo" style="display: none;"></div>
+
+
+            <div id="nodediv_rich_text" style="display: none;"></div>
+
+            <div id="nodediv_stage" class="tnm_stage" style="display: none;">
+                <div class="tnm_result"><span>分期结果：</span><span id="stage_result"></span></div>
+                <div class="tnm_result" id="stage_result_desc"></div>
+                <div class="tnm_desc" id="stage_rich_text"></div>
+            </div>
+        </div>
+        <div id="note"></div>
+    </div>
+</div>
+
+<!--div class="row">
+    <div class="col-sm-3">
+        <button type="button" class="btn btn-default btn-sm" onclick="history.go(-1);">返回</button>
+    </div>
+</div-->
+
+
+<!--灰色遮罩层 begin-->
+
+<div class="floatLayer" style="display: none;">
+    <div class="liadloging">
+        <div class="text-center">
+            <img height="40px" src="/static/image/ajax-loader.gif"/>
+        </div>
+    </div>
+</div> 
+
+<!--灰色遮罩层 end-->
+
+
+<div>
+    <a href="/wx/tnm_cate_init?session_id=$session_id" class="float">
+        <span style="margin-top: 15px; display: inline-block; ">首页</span>
+    </a>
+    <a href="#" class="float2" id="bar_open">
+        <span style="margin-top: 15px; display: inline-block; ">目录</span>
+    </a>
+</div>
+
+<!-- 侧栏帮助说明 -->
+<div class="slide-out-div" id="slide-out-div" style="display: none;">
+    <a class="handle" href="#">Content</a>
+    <h4>使用提示：</h4>
+    <ul>
+        <li>双击节点展开下一级节点</li>
+        <li>单击标注查看详细注释</li>
+        <li>将手机横屏，使用效果更佳</li>
+    </ul>
+</div>
+
+</div>
+
+<br/>
+
+<div class="row">
+    <div class="col-xs-4">
+        <div style="margin-left: 5px;">
+            <img width="100%" src="/static/image/cnnc.jpg">
+        </div><div style="margin-left: 5px;">
+        </div>
+    </div>
+    <div class="col-xs-8">
+    </div>
+</div>
+
+<br/>
+
+</body>
+</html>
+
+
